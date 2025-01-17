@@ -1,0 +1,107 @@
+### **Wrap-Up of Troubleshooting in Tomcat**
+
+When working with Apache Tomcat, a common challenge is troubleshooting issues that arise during the deployment and execution of web applications. Tomcat offers several tools and techniques to help identify and resolve these issues effectively. Below is a comprehensive explanation of the common troubleshooting scenarios and how to handle them.
+
+---
+
+### **Troubleshooting Web Application Issues**
+
+When deploying a web application in Tomcat, several issues might occur. These can range from problems with the WAR (Web Application Archive) file to errors in JavaServer Pages (JSP) or servlets.
+
+#### **1. Bad XML Configuration Files**
+
+- **Symptom**: The deployed WAR file is not unpacked or “unwared.”
+- **Cause**: This issue often arises due to errors in the `web.xml` configuration file within the WAR file.
+- **Troubleshooting**:
+  - Check the `web.xml` file for syntax errors or misconfigurations.
+  - Use XML validation tools to ensure the file adheres to the correct schema.
+- **Example**:
+  ```xml
+  <web-app>
+    <servlet>
+      <servlet-name>MyServlet</servlet-name>
+      <servlet-class>com.example.MyServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+      <servlet-name>MyServlet</servlet-name>
+      <url-pattern>/myServlet</url-pattern>
+    </servlet-mapping>
+  </web-app>
+  ```
+
+#### **2. JSP Translation-Time Errors**
+
+- **Symptom**: Errors related to Java syntax or missing libraries during the translation of JSP files.
+- **Cause**: JSP files with incorrect Java code or missing dependencies.
+- **Troubleshooting**:
+  - Review the error messages provided by Tomcat for hints on the problematic code.
+  - Ensure all necessary libraries are included in the `WEB-INF/lib` directory.
+- **Solution**: Consider pre-compiling JSP files to catch errors early and improve performance.
+- **Example**:
+  ```jsp
+  <% 
+     int num = 10; 
+     out.println("Number: " + num); 
+  %>
+  ```
+
+#### **3. Run-Time Errors in Servlets and POJOs**
+
+- **Symptom**: Errors during the execution of servlets or Plain Old Java Objects (POJOs).
+- **Cause**: Exceptions in the application code.
+- **Troubleshooting**:
+  - Use Tomcat’s error pages to identify the method and line number causing the exception.
+  - Implement logging using `System.err` and `System.out` to track the application's flow and debug issues.
+- **Example**:
+  ```java
+  try {
+      // Code that may throw an exception
+  } catch (Exception e) {
+      e.printStackTrace();
+  }
+  ```
+
+---
+
+### **Troubleshooting Tomcat and System Issues**
+
+Beyond application-level issues, problems can also arise at the server or system level.
+
+#### **1. Application Stops Responding**
+
+- **Symptom**: A previously working application stops handling requests.
+- **Cause**: Potential memory leaks or resource exhaustion.
+- **Troubleshooting**:
+  - Use the Tomcat Web Console to redeploy the application.
+  - If redeployment fails, try unloading and reloading the application.
+- **Example**:
+  - Navigate to `http://localhost:8080/manager/html` and select the appropriate options to redeploy the application.
+
+#### **2. System Resources Running Low**
+
+- **Symptom**: Low heap storage or other resource constraints.
+- **Cause**: High memory usage or inefficient resource management.
+- **Troubleshooting**:
+  - Monitor the server’s memory usage through the Tomcat Web Console or external monitoring tools.
+  - If memory issues persist, restart Tomcat using `shutdown.sh` (or `shutdown.bat` on Windows) to gracefully stop and restart the server.
+- **Example**:
+  ```bash
+  ./TOMCAT_HOME/bin/shutdown.sh
+  ./TOMCAT_HOME/bin/startup.sh
+  ```
+
+---
+
+### **Best Practices for Troubleshooting in Tomcat**
+
+1. **Regular Monitoring**: Use Tomcat’s built-in monitoring tools to keep an eye on resource usage and application performance.
+2. **Logging**: Implement detailed logging to capture application behaviour and errors.
+3. **Backup Configuration Files**: Always backup configuration files before making changes.
+4. **Pre-compile JSPs**: Pre-compiling JSPs can help catch errors early and improve deployment efficiency.
+5. **Graceful Shutdowns**: Use Tomcat’s shutdown scripts for graceful server restarts to avoid data corruption or loss.
+
+---
+
+### **Conclusion**
+
+Effective troubleshooting in Tomcat involves a combination of understanding common issues, using the right tools, and following best practices. By mastering these aspects, developers and administrators can ensure their applications run smoothly and efficiently on the Tomcat server.
